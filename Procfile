@@ -1,0 +1,1 @@
+web: gunicorn panels_oauth:app
