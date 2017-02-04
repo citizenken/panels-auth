@@ -1,2 +1,3 @@
 Flask==0.12
+gunicorn==19.6.0
 -e git://github.com/citizenken/flask-dance.git@master#egg=flask-dance
