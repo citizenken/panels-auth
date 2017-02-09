@@ -6,15 +6,15 @@ flask_secret = os.getenv('FLASK_SECRET', None)
 client_id = os.getenv('CLIENT_ID', None)
 client_secret = os.getenv('CLIENT_SECRET', None)
 
-if not flask_secret:
-    raise ValueError('FLASK_SECRET not set in environment')
-if not client_id:
-    raise ValueError('CLIENT_ID not set in environment')
-if not client_secret:
-    raise ValueError('CLIENT_SECRET not set in environment')
+# if not flask_secret:
+#     raise ValueError('FLASK_SECRET not set in environment')
+# if not client_id:
+#     raise ValueError('CLIENT_ID not set in environment')
+# if not client_secret:
+#     raise ValueError('CLIENT_SECRET not set in environment')
 
 app = Flask(__name__)
-app.secret_key = flask_secret
+app.secret_key = 'fdsfsdfdsfsfsdf'
 
 oauth_scopes = [
     'openid',
@@ -35,6 +35,9 @@ app.register_blueprint(blueprint, url_prefix="/login")
 
 @app.route("/")
 def google_oauth():
+    prompt = request.args.get('prompt', '')
+    blueprint.authorization_url_params["prompt"] = prompt
+
     if not google.authorized:
         return redirect(url_for("google.login"))
     return redirect(url_for("electron_callback",
