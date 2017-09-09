@@ -1,5 +1,7 @@
 from flask import Flask, redirect, url_for, request, session
 from flask_dance.contrib.google import make_google_blueprint, google
+from oauth2client import client, GOOGLE_TOKEN_URI
+import httplib2
 import os
 
 flask_secret = os.getenv('FLASK_SECRET', None)
@@ -27,7 +29,8 @@ blueprint = make_google_blueprint(
     client_id=client_id,
     client_secret=client_secret,
     scope=oauth_scopes,
-    prompt="select_account"
+    reprompt_consent=True,
+    offline=True
 )
 
 app.register_blueprint(blueprint, url_prefix="/login")
@@ -41,7 +44,9 @@ def google_oauth():
     if not google.authorized:
         return redirect(url_for("google.login"))
     return redirect(url_for("electron_callback",
-                    id_token=google.token.get('id_token')))
+        id_token=google.token.get('id_token'),
+        refresh_token=google.token.get('refresh_token')
+        ))
 
 
 @app.route("/callback")
@@ -49,6 +54,23 @@ def electron_callback():
     if not request.args.get('id_token'):
         return redirect(url_for('google_oauth'))
     return "authenticated"
+
+
+@app.route("/refresh", methods=["GET"])
+def refresh_access_token():
+    refresh_token = request.args.get('refresh_token', '');
+    credentials = client.OAuth2Credentials(
+        None,
+        client_id,
+        client_secret,
+        refresh_token,
+        None,
+        GOOGLE_TOKEN_URI,
+        None)
+
+    http = credentials.authorize(httplib2.Http())
+    http = credentials.refresh(http)
+    return credentials.id_token_jwt;
 
 
 @app.route('/logout', methods=['GET'])

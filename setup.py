@@ -9,7 +9,8 @@ setup(name='panels-oauth',
       author_email='kennethpetti@gmail.com',
       install_requires=[
           'Flask',
-          'Flask-Dance==0.10.2'
+          'Flask-Dance',
+          'oauth2client'
       ],
       dependency_links=[
             'https://github.com/citizenken/flask-dance/tarball/master#egg=Flask-Dance-0.10.2'
