@@ -1,5 +1,5 @@
-#Panels-auth#
-A simple Flask app that forwards Google Oauth requests from Panels-electron. This keeps the Oauth client ID and secret secure on a server, where it can't be unpacked or inspected.
+# Panels-auth
+A simple Flask app that forwards Google Oauth requests from the Panels electron app. This keeps the Oauth client ID and secret secure on a server, where it can't be unpacked or inspected.
 
 It consists of a few endpoints:
 1. `/auth` which starts the Oauth exchange
